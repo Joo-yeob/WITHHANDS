@@ -97,4 +97,8 @@ src/
 
 ## 라이선스
 
+<<<<<<< HEAD
 MIT
+=======
+MIT
+>>>>>>> 7af8761 (Fix Vercel routing and logout redirect)

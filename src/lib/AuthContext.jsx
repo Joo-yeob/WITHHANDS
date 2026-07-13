@@ -1,10 +1,12 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { clearSession } from '@/lib/session';
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
+  const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoadingAuth, setIsLoadingAuth] = useState(true);
@@ -37,17 +39,14 @@ export const AuthProvider = ({ children }) => {
     setIsLoadingPublicSettings(false);
   };
 
-  const logout = (shouldRedirect = true) => {
+  const logout = () => {
     setUser(null);
     setIsAuthenticated(false);
     clearSession();
-    if (shouldRedirect) {
-      window.location.href = '/login';
-    }
   };
 
   const navigateToLogin = () => {
-    window.location.href = '/login';
+    navigate('/login', { replace: true });
   };
 
   return (
