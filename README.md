@@ -1,77 +1,100 @@
-# Base44 Project
+# 핸즈덱스 (HandsDex)
 
-Use this repository to run and edit the app locally, then publish changes back through Base44.
+사진을 찍으면 AI가 판타지 생물로 변환해주는 도감 수집 앱입니다.
 
-Any change pushed to the repo will also be reflected in the Base44 Builder.
+## 기술 스택
 
-## Prerequisites
+- **Frontend**: React + Vite + Tailwind CSS + shadcn/ui
+- **Database & Auth**: Supabase
+- **Storage**: Supabase Storage
+- **AI**: Google Gemini 2.5 Flash (`@google/genai` SDK)
+- **Animations**: Framer Motion
 
-1. Clone the repository using the project's Git URL.
-2. Navigate to the project directory.
-3. Install dependencies: `npm install`.
-4. Install the Base44 CLI: `npm install -g base44@latest`.
+## 주요 기능
 
-See the [Base44 CLI docs](https://docs.base44.com/developers/references/cli/get-started/overview) if you want to run Base44 commands directly.
+- 📸 **캡처**: 사진을 찍거나 업로드하면 AI가 판타지 생물로 변환
+- 📖 **도감**: 수집한 생물을 한눈에 보기
+- 🔍 **검색**: 이름, 타입, 레어도로 생물 검색
+- 👤 **프로필**: 닉네임, 상태메시지, 프로필 이미지 관리
+- 👥 **친구**: 친구 코드로 친구 추가 및 도감 공유
 
-## Run Locally
+## 시작하기
 
-Run the full local development environment from the project root:
+### 1. 사전 준비
+
+- Node.js 18 이상
+- [Supabase](https://supabase.com) 프로젝트
+- [Google AI Studio](https://aistudio.google.com)에서 Gemini API 키 발급
+
+### 2. 설치
 
 ```bash
-base44 dev
+git clone <repo-url>
+cd handsdex
+npm install
 ```
 
-`base44 dev` starts the local Base44 development backend and, when this app is configured for it, also starts the frontend dev server for you. Use the frontend URL printed by the command.
+### 3. 환경 변수 설정
 
-For example, when the Base44 project config includes a `serveCommand`, `base44 dev` can launch the frontend too:
+`src/.env` 파일을 생성하고 아래 값을 채워주세요:
 
-```json5
-{
-  "site": {
-    "serveCommand": "npm run dev"
-  }
-}
+```bash
+# Supabase
+VITE_SUPABASE_URL=your-supabase-url
+VITE_SUPABASE_ANON_KEY=your-supabase-anon-key
+
+# Google Gemini
+VITE_GEMINI_API_KEY=your-gemini-api-key
 ```
 
-In a Base44 project this lives in `base44/config.jsonc`.
+### 4. Supabase 설정
 
-## Run Only The Frontend
+#### 데이터베이스 스키마
 
-If you only want to work on the frontend against the hosted Base44 backend, run:
+`supabase_schema.sql` 파일을 Supabase SQL Editor에서 실행하세요:
+
+```bash
+# Supabase Dashboard → SQL Editor → supabase_schema.sql 내용 실행
+```
+
+#### Storage 버킷
+
+Supabase Dashboard → Storage에서 `uploads`라는 **public** 버킷을 생성하세요.
+
+파일은 자동으로 다음 폴더에 저장됩니다:
+- `uploads/profile/` — 프로필 이미지
+- `uploads/creatures/` — 캡처한 생물 이미지
+
+### 5. 실행
 
 ```bash
 npm run dev
 ```
 
-Open the local URL printed by Vite.
+Vite가 출력하는 로컬 URL을 브라우저에서 열면 됩니다.
 
-## Use The Hosted Backend
+## 프로젝트 구조
 
-For frontend-only development, create or update `.env.local` in the project root:
-
-```bash
-VITE_BASE44_APP_ID=your_app_id
-VITE_BASE44_APP_BASE_URL=https://your-app.base44.app
+```
+src/
+├── api/                  # Supabase 클라이언트 및 DB 래퍼
+│   ├── supabaseClient.js
+│   ├── dbClient.js
+│   └── base44Client.js   # 인터페이스 호환용
+├── components/
+│   ├── capture/          # 캡처 관련 컴포넌트
+│   ├── creatures/        # 생물 카드 컴포넌트
+│   ├── layout/           # 레이아웃
+│   ├── profile/          # 프로필 모달
+│   └── ui/               # shadcn/ui 컴포넌트
+├── pages/                # 라우트 페이지
+├── services/
+│   ├── aiService.js      # Gemini 2.5 Flash 연동
+│   └── storageService.js # Supabase Storage 연동
+├── lib/                  # 유틸리티, 인증 컨텍스트
+└── App.jsx               # 라우터
 ```
 
-`VITE_BASE44_APP_ID` identifies the Base44 app.
+## 라이선스
 
-`VITE_BASE44_APP_BASE_URL` tells the Base44 Vite plugin where to send local `/api` requests. Point it at your deployed Base44 app URL when you want the local frontend to use the hosted backend.
-
-When you use `base44 dev`, the command injects the local Base44 values for you, so `.env.local` is mainly needed for frontend-only workflows.
-
-## Publish Your Changes
-
-After pushing your changes to git, open the Base44 dashboard and publish the app:
-
-```bash
-base44 dashboard open
-```
-
-## Docs & Support
-
-Documentation: [https://docs.base44.com/Integrations/Using-GitHub](https://docs.base44.com/Integrations/Using-GitHub)
-
-Base44 CLI command reference: [https://docs.base44.com/developers/references/cli/commands/introduction](https://docs.base44.com/developers/references/cli/commands/introduction)
-
-Support: [https://app.base44.com/support](https://app.base44.com/support)
+MIT
