@@ -94,11 +94,3 @@ src/
 ├── lib/                  # 유틸리티, 인증 컨텍스트
 └── App.jsx               # 라우터
 ```
-
-## 라이선스
-
-<<<<<<< HEAD
-MIT
-=======
-MIT
->>>>>>> 7af8761 (Fix Vercel routing and logout redirect)
